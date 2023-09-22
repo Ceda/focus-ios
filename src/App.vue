@@ -1,7 +1,16 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div>
+                  <HelloWorld
+                :options="['a', 'b', 'c', 'd', 'e', 'f']"
+                v-model.lazy="unit_type"
+                :show-custom="true"
+                input-type="text"
+                data-value-type="string"
+              />
+                </div>
+
   </div>
 </template>
 
@@ -10,6 +19,11 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
+  data: function() {
+return {
+    unit_type: '',
+  };
+},
   components: {
     HelloWorld
   }

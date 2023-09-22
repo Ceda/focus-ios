@@ -1,58 +1,154 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <div
+      class="select-wrapper"
+    >
+      <select
+        v-model="selectedOption"
+        @change="handleOptionChange"
+        @blur="handleBlur"
+        ref="select"
+      >
+        <option
+          v-for="option in options"
+          :key="option"
+          :value="option"
+        >
+          {{ option }} {{ optionSuffix }}
+        </option>
+
+        <option
+          v-if="showCustom"
+          value="custom"
+        >
+          {{ 'custom_vat_rate' }}
+        </option>
+      </select>
+      <i
+        class="dropdown-icon el-input__icon el-icon-arrow-down"
+      />
+    </div>
+    <div
+    >
+      <input
+        ref="customInput"
+        v-model="customValue"
+        :type="inputType"
+      >
+    </div>
+    <button @click="focusInput">kkoko</button>
   </div>
 </template>
 
 <script>
+
 export default {
-  name: 'HelloWorld',
   props: {
-    msg: String
+    options: {
+      type: Array,
+      default() {
+        return [];
+      },
+    },
+    value: [String, Number, null],
+    showCustom: {
+      type: Boolean,
+      default: false,
+    },
+    inputType: {
+      type: String,
+      default: 'text',
+    },
+    dataValueType: {
+      type: String,
+      default: 'string',
+    },
+    optionSuffix: {
+      type: String,
+      default: '',
+    },
+  },
+  data() {
+    return {
+      selectedOption: null,
+      customValue: '',
+      showCustomInput: false,
+    };
+  },
+  methods: {
+    handleBlur() {
+      this.focusInput();
+    },
+    focusInput() {
+      this.$refs.customInput.focus();
+    },
+    handleOptionChange() {
+      if (this.selectedOption === 'custom') {
+        this.showCustomInput = true;
+      } else {
+        this.showCustomInput = false;
+      }
+    },
+    handleCustomInputBlur() {
+      // ....
+    },
+    isValueInOptions() {
+      return this.options.includes(this.value);
+    },
+  },
+  watch: {
+    value: {
+      immediate: true,
+      handler(newVal) {
+        if (this.isValueInOptions(newVal)) {
+          this.showCustomInput = false;
+          this.selectedOption = newVal;
+          this.customValue = '';
+        } else if (newVal) {
+          this.showCustomInput = true;
+          this.customValue = newVal;
+        } else {
+          this.showCustomInput = false;
+        }
+      },
+    },
+  },
+  mounted() {
   }
-}
+};
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style lang="scss">
+  select, input {
+    font-size: inherit;
+    font-weight: 600;
+    padding: .7rem 1rem;
+    border-radius: 8px;
+  }
+
+.dropdown-icon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: rgb(42, 36, 36);
+  font-weight: 600;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+select:focus + .dropdown-icon {
+  transform: translateY(-50%) rotate(180deg);
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
+
+input:focus-visible {
+  outline: 2px solid crimson;
+  border-radius: 3px;
 }
-a {
-  color: #42b983;
+
+select:focus-visible {
+  border: 2px dashed crimson;
+  border-radius: 3px;
+  outline: none;
 }
+
 </style>
