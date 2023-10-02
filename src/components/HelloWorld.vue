@@ -2,27 +2,18 @@
   <div>
     <div
       class="select-wrapper"
+
     >
       <select
         v-model="selectedOption"
         @change="handleOptionChange"
-        @blur="handleBlur"
         ref="select"
       >
-        <option
-          v-for="option in options"
-          :key="option"
-          :value="option"
-        >
-          {{ option }} {{ optionSuffix }}
-        </option>
+       <option value="1">one</option>
+  <option value="2">two</option>
+  <option value="3">three</option>
+  <option value="custom">custom</option>
 
-        <option
-          v-if="showCustom"
-          value="custom"
-        >
-          {{ 'custom_vat_rate' }}
-        </option>
       </select>
       <i
         class="dropdown-icon el-input__icon el-icon-arrow-down"
@@ -32,6 +23,7 @@
     >
       <input
         ref="customInput"
+        id="customInput"
         v-model="customValue"
         :type="inputType"
       >
@@ -76,45 +68,31 @@ export default {
     };
   },
   methods: {
+      logEvent(event) {
+    console.log(event.type);
+  },
     handleBlur() {
-      this.focusInput();
+      this.$nextTick(() => {
+        this.focusInput();
+      });
     },
     focusInput() {
       this.$refs.customInput.focus();
     },
-    handleOptionChange() {
+    handleOptionChange(event) {
       if (this.selectedOption === 'custom') {
         this.showCustomInput = true;
+        console.log(event.type);
+        this.focusInput();
       } else {
         this.showCustomInput = false;
       }
     },
-    handleCustomInputBlur() {
-      // ....
-    },
-    isValueInOptions() {
-      return this.options.includes(this.value);
-    },
-  },
-  watch: {
-    value: {
-      immediate: true,
-      handler(newVal) {
-        if (this.isValueInOptions(newVal)) {
-          this.showCustomInput = false;
-          this.selectedOption = newVal;
-          this.customValue = '';
-        } else if (newVal) {
-          this.showCustomInput = true;
-          this.customValue = newVal;
-        } else {
-          this.showCustomInput = false;
-        }
-      },
-    },
   },
   mounted() {
-  }
+
+  },
+
 };
 </script>
 

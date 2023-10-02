@@ -1,13 +1,7 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
     <div>
-                  <HelloWorld
-                :options="['a', 'b', 'c', 'd', 'e', 'f']"
-                v-model.lazy="unit_type"
-                :show-custom="true"
-                input-type="text"
-                data-value-type="string"
+                  <SelectoInput
               />
                 </div>
 
@@ -15,7 +9,7 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import SelectoInput from './components/SelectoInput.vue'
 
 export default {
   name: 'App',
@@ -25,7 +19,7 @@ return {
   };
 },
   components: {
-    HelloWorld
+    SelectoInput
   }
 }
 </script>
